@@ -825,4 +825,70 @@ library(purrr)
 # Map directly and define your expected output type explicitly
 mapped_results <- map_dbl(site_areas, sqrt)
 
-    
+##no right or wrong approach
+##either base R or tidyverse methods provide the same result
+##figure out what works for you
+
+# Iterating across complex groups #
+
+##can combine purrr pipelines seamlessly inside data frames to split analysis across separate groups
+
+# Iterate a summary function over split lists of data
+iris %>% 
+  split(.$Species) %>% 
+  map(~summary(.x))
+
+# Task using chattr #
+
+# 4.7 Writing custom functions ####
+
+##if copy-pasting code, can be inefficient and error-prone
+##need to write custom function
+
+# Function Construction blueprint #
+
+##function = name, argument (input variables) and body (execution logic wrapped inside curly braces)
+
+# Function Definition
+calculate_coral_mortality <- function(initial_count, surviving_count) {
+  
+  # Logic safety switch using our conditional tools!
+  if (initial_count <= 0) {
+    stop("Initial count must be greater than zero.")
+  }
+  
+  mortality_rate <- (initial_count - surviving_count) / initial_count
+  return(mortality_rate)
+}
+
+# Utilizing your custom function
+calculate_coral_mortality(initial_count = 120, surviving_count = 84)
+
+##Best practice rule:
+##1. Always test your functions in a clean local environment. 
+##2. Ensure they rely strictly on the arguments passed directly into them, rather than accidentally grabbing random background objects floating in your global R environment.
+
+
+#student exercise 4: custom function construction task #
+
+#Task: Build a custom function named convert_temp_c_to_f that accepts a single argument representing temperature in Celsius. The function should perform the math conversion: F = (C * 9/5) + 32. Include a conditional safety check using an if statement that halts execution via stop() if the entered value is below absolute zero (-273.15 degrees Celsius). Test your function with both a valid temperature and an invalid value to ensure the error handling behaves as expected.
+convert_temp_c_to_f <- function(temp_c) { 
+  # Safety check for absolute zero
+  if (temp_c < -273.15) {
+    stop("Temperature cannot be below absolute zero (-273.15°C).")
+  }
+  
+  # Conversion formula
+  temp_f <- (temp_c * 9/5) + 32
+  return(temp_f)
+} 
+
+# 4.8 Advanced scripting extension challenges ####
+
+# Challenge 1 : Nested multi-vector iteration #
+
+
+# Challenge 2 : Nested Multi-vector iteration
+
+
+  
