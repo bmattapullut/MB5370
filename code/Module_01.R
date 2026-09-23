@@ -654,10 +654,10 @@ ggplot(data = mpg) +
 #  <FACET_FUNCTION>
 
 
-#adding git to R
+#adding git to R ####
 gitcreds::gitcreds_set()
 
-#prompting copilot to load core packages
+#prompting copilot to load core packages ####
 
 # Load tidyverse and palmerpenguins libraries
 
@@ -701,3 +701,128 @@ ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g, co
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Flipper Length (mm)", y = "Body Mass (g)", title = "Biomass Correlation by Species")
  
+#4.4 chattr ####
+
+library(ggplot2)
+
+data(iris)
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point()
+
+#4.5 Conditional logic - filtering your data ####
+
+# base R : if and else
+
+## uses round brackets () for the logical condition
+## curly braces {} for the action if that condition is true.
+
+# Simple Example: Checking Sea Surface Temperature (SST)
+sst <- 30.2
+
+if (sst > 29.5) {
+  print("Warning: Marine heatwave threshold exceeded!")
+} else {
+  print("SST remains within baseline parameters.")
+}
+
+#Tidyverse Alternative: Vectorised conditionals (dplyr) ####
+
+# if_else() #
+##function in dplyr allows you to apply conditional logic across entire vectors or columns in a dataframe.
+
+
+# Load tidyverse (if not already loaded)
+library(tidyverse)
+
+# Sample coral data
+coral_monitoring <- tibble(
+  site = c("Site_A", "Site_B", "Site_C"),
+  depth_m = c(12, 35, 8)
+)
+
+# Classify depth using if_else
+coral_monitoring <- coral_monitoring %>% 
+  mutate(zone = if_else(depth_m > 30, "Deep Reef", "Shallow Reef"))
+
+##mutate() function is used to create a new column called zone based on the depth_m values.
+##we get more information about mutate() by using ?mutate in the console.
+## the %>% operator is used to chain together multiple operations in a readable manner. It takes the output of one function and passes it as the input to the next function.
+##tibble() is a function from the tibble package (part of tidyverse) that creates a data frame-like structure. It is used here to create a sample dataset called coral_monitoring with two columns: site and depth_m.
+
+#case_when() #
+
+##having more than 2 possibilities, causes the multiple if-else blocks to stack and it becomes unreadable. case_when() is a more elegant solution for multiple conditions.
+##case_when() allows you to specify multiple conditions and their corresponding outputs in a clear and concise manner.
+##it also provides a clean, sequential evaluation layout using formula tildes (~)
+
+coral_monitoring <- coral_monitoring %>% 
+  mutate(reef_category = case_when(
+    depth_m < 10  ~ "Lagoon / Flats",
+    depth_m <= 30 ~ "Crest / Slope",
+    depth_m > 30  ~ "Mesophotic / Deep",
+    TRUE          ~ "Unclassified" # Catch-all remainder
+  ))
+
+#Task: Environmental stress classification
+
+# initialises a tibble named marine_stations containing a column for salinity with values 35, 28, 32, and 12. Use the pipe operator (%>%) and mutate() combined with case_when() to create a new column named environment_type. Classify values below 15 as "Estuarine", values between 15 and 30 as "Brackish", and values above 30 as "Marine"  
+marine_stations <- tibble( 
+  salinity = c(35, 28, 32, 12)
+) %>% 
+  mutate(environment_type = case_when(
+    salinity < 15 ~ "Estuarine",
+    salinity >= 15 & salinity <= 30 ~ "Brackish",
+    salinity > 30 ~ "Marine"
+  )) 
+
+#4.6 Automation - iterating efficiently ####
+
+##Automation is instructing R to repeat a task across multiple items without manual copy-paste
+
+#Base R: for-loops #
+
+##for-loop repeats a code chunk for each element in a designated sequence
+
+# Classic loop anatomy
+for (year in 2020:2024) {
+  print(paste("Processing climate data for year:", year))
+}
+
+##to track real-world data, loops can iterate over file directories
+# Loop across index sequences
+transect_lengths <- c(50, 100, 25, 75)
+
+for (i in seq_along(transect_lengths)) {
+  print(paste("Transect number", i, "measures", transect_lengths[i], "metres."))
+}
+
+
+#Tidyverse alternative: funtional programming (purrr) ####
+
+##for-loops is a core programming construct
+##require to manage index variables and explicitlt set up empty "containers" to store results
+##leads to verbose code and hidden bugs
+
+##The tidyverse handles iteration via the purrr package using map functions
+##These map a specific operation onto every item in a list or vector, automatically ensuring that your output matches the precise data structure you expect.
+
+##map() - returns a flexible list structure
+##map_dbl() - returns a vector of Decimals / Numeric values
+##map_chr() - Returns a vector of Text strings / Characters
+##map_df() - Returns a combined Data Frame / Tibble
+
+# Comparison Example: Calculating Square Roots of Site Vectors #
+
+#Using a standard for-loop:
+
+site_areas <- c(144, 400, 625)
+results <- numeric(length(site_areas)) # Must build an empty container first 
+for(i in seq_along(site_areas)) {
+  results[i] <- sqrt(site_areas[i]) } 
+
+#Using the purrr equivalent:
+library(purrr)
+# Map directly and define your expected output type explicitly
+mapped_results <- map_dbl(site_areas, sqrt)
+
+    
