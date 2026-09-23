@@ -661,3 +661,43 @@ gitcreds::gitcreds_set()
 
 # Load tidyverse and palmerpenguins libraries
 
+# Load tidyverse and palmerpenguins libraries
+library(tidyverse)
+library(palmerpenguins)
+
+# Create a ggplot scatter plot using the penguins dataset. 
+# Plot bill_length_mm on the x-axis and bill_depth_mm on the y-axis.
+# Color points by species and use geom_point with size 3.
+# Add a minimal theme and clean labels.
+ggplot(data = penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(x = "Bill Length (mm)", y = "Bill Depth (mm)", color = "Species")
+
+
+#[Your Turn: Write 3-4 descriptive lines here explaining your choice]
+
+# Next, hit Enter, let Copilot predict the ggplot pipeline, and press Tab to accept.
+
+#Option A (Distribution Check): Instruct Copilot to generate a boxplot comparing flipper_length_mm across different species, faceted by island, using custom color palettes.
+ggplot(data = penguins, mapping = aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_boxplot() 
+
+#create a boxplot comparing flipper_length_mm across different species, faceted by island, using custom color palettes. Use geom_boxplot() to create the boxplot and facet_wrap(~island) to facet by island. Add appropriate axis labels and a title to the plot.
+ggplot(data = penguins, mapping = aes(x = species, y = flipper_length_mm, fill = species)) +
+  geom_boxplot() +
+  facet_wrap(~island) +
+  scale_fill_manual(values = c("darkorange", "steelblue", "forestgreen")) +
+  labs(x = "Species", y = "Flipper Length (mm)", title = "Flipper Length Distribution by Species and Island") +
+  theme_minimal()      
+
+#Option B (Biomass Correlation): Instruct Copilot to build a scatter plot mapping body_mass_g against flipper_length_mm, adding a linear regression trend line (geom_smooth) for each species
+
+#create a scatter plot of body_mass_g vs flipper_length_mm, colored by species, with a linear regression trend line for each species. the trend line should be added using geom_smooth with method = "lm" and se = FALSE to remove the confidence interval shading. Add appropriate axis labels and a title to the plot
+  
+#create a scatter plot of body_mass_g vs flipper_length_mm, colored by species, with a linear regression trend line for each species. the trend line should be added using geom_smooth with method = "lm" and se = FALSE to remove the confidence interval shading. Add appropriate axis labels and a title to the plot
+ggplot(data = penguins, mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point(size = 3) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Flipper Length (mm)", y = "Body Mass (g)", title = "Biomass Correlation by Species")
+ 
