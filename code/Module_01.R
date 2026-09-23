@@ -653,5 +653,11 @@ ggplot(data = mpg) +
 #  ) +
 #  <FACET_FUNCTION>
 
+
+#adding git to R
 gitcreds::gitcreds_set()
+
+#prompting copilot to load core packages
+
+# Load tidyverse and palmerpenguins libraries
 
